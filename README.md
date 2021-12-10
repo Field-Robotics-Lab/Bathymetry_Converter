@@ -24,7 +24,7 @@ Go to the working directory and make a child directory named with `bathymetry_so
 ### Download `mkbathy.sh` script and make modifications
 At the working directory
 ```bash
-wget https://github.com/Field-Robotics-Lab/Bathymetry_Converter/blob/master/mkbathy.sh
+wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.sh
 ```
 You may want to change following parameters in the script,
 - `prefix` : prefix for the model names
