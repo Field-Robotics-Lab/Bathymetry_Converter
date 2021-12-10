@@ -7,6 +7,7 @@
 # NCEI 1/9 topobathy near woods hole.
 PREFIX=ncei19
 SRC=bathymetry_source/ncei19_n41x75_w070x75_2018v1.tif
+EPSG=26987
 
 # 500 m x 500 m, roughly.
 # DLON=0.006
@@ -63,7 +64,7 @@ while [[ $(calc "($lon < $ENDLON)") -eq 1 ]]; do
 
 
     #for  number of cores, do the tasks below but background the delaunay triangulation.
-    
+
     while [[ $(calc "($lat < $ENDLAT)") -eq 1 ]]; do
 
 	elat=$(calc -p "($lat+$DLAT)")
@@ -75,7 +76,7 @@ while [[ $(calc "($lon < $ENDLON)") -eq 1 ]]; do
 
 	# create output filename
 	fname=$(printf R_%.03f_%.03f_%0.3f_%.03f $lon $elon $lat $elat)
-	
+
 	# cut the lat/lon grid to this region.
 	echo "Cut to region..."
 	gmt grdcut bathymetry/$PREFIX.grd -Gbathymetry/$PREFIX.$fname.grd -R$sslon/$eelon/$sslat/$eelat
@@ -96,47 +97,47 @@ while [[ $(calc "($lon < $ENDLON)") -eq 1 ]]; do
 	#echo $projfname
 	# Much easier to search in regular lat/lon grid.
 	projfname=$fname
-	
+
 	# reproject into a MA coordinate system.  Get the EPSG codes from http://epsg.io
 	echo "Project..."
-	echo "X Y Z" > bathymetry/$PREFIX.$projfname.epsg26987.asc  # header will be necessary in next step.
-	cat  bathymetry/$PREFIX.$fname.xyz |  gdaltransform -s_srs EPSG:4326 -t_srs EPSG:26987 >> bathymetry/$PREFIX.$projfname.epsg26987.asc
-	
+	echo "X Y Z" > bathymetry/$PREFIX.$projfname.epsg$EPSG.asc  # header will be necessary in next step.
+	cat  bathymetry/$PREFIX.$fname.xyz |  gdaltransform -s_srs EPSG:4326 -t_srs EPSG:$EPSG >> bathymetry/$PREFIX.$projfname.epsg$EPSG.asc
+
 	# 2D delaunay translation to generate a ply file to import into meshlab for simplification and texture mapping.  Requires pdal >= 1.9  (i.e. compile from source)
 	# Single core...  Use blah&; blah&; wait
 	# This produces walls at the edges where the mesh is concave.  convex edges work fine.
 	echo "Start triangulation..."
-	pdal translate --reader text -i bathymetry/$PREFIX.$projfname.epsg26987.asc -o bathymetry/$PREFIX.$projfname.epsg26987.ply --writers.ply.faces=true -f delaunay
+	pdal translate --reader text -i bathymetry/$PREFIX.$projfname.epsg$EPSG.asc -o bathymetry/$PREFIX.$projfname.epsg$EPSG.ply --writers.ply.faces=true -f delaunay
 	# greedymesh (now called greedyprojection) should be much more suited to this, but it segfaults without any useful error even with debugging turned on.  I doubt these
-	# clouds are too big.  Could be the numbers are too big?  No.  small files and small numbers made no difference.  
+	# clouds are too big.  Could be the numbers are too big?  No.  small files and small numbers made no difference.
 	#pdal translate --reader text -i bathymetry/$PREFIX.$projfname.epsg26987.asc -o bathymetry/$PREFIX.$projfname.epsg26987.ply --writers.ply.faces=true -f greedyprojection  --filters.greedyprojection.multiplier=2 --filters.greedyprojection.radius=4
 	echo "Done."
 
 	# Simplify in meshlab and get rid of spurious faces at edges from triangulation.  Vertex normals need to be retained.
 	#meshlabserver -i bathymetry/$PREFIX.$projfname.epsg26987.ply -s mkbathy_dependencies/bathy.mlx -o bathymetry/$PREFIX.$projfname.epsg26987.obj -om vn
 	# script bathy3.mlx works in version 2020.03.  many syntax changes between versions.
-	./mkbathy_dependencies/meshlab_linux_portable/meshlabserver -i bathymetry/$PREFIX.$projfname.epsg26987.ply -s $MLX -o bathymetry/$PREFIX.$projfname.epsg26987.obj -m vn wt
+	./mkbathy_dependencies/meshlab_linux_portable/meshlabserver -i bathymetry/$PREFIX.$projfname.epsg$EPSG.ply -s $MLX -o bathymetry/$PREFIX.$projfname.epsg$EPSG.obj -m vn wt
 
 	# texture map?!  Not useful for underwater stuff anyway and we can use tiling in gazebo.
 
 	# put the final product in a folder that conforms to gazebo model database structure
 	#@@@ move this from bathymetry/ obviously.
-	MODEL_URI=$PREFIX.$projfname.epsg26987
+	MODEL_URI=$PREFIX.$projfname.epsg$EPSG
 	MODEL_DIR=bathymetry/$MODEL_URI
 	mkdir -p $MODEL_DIR/meshes
-	cp bathymetry/$PREFIX.$projfname.epsg26987.obj $MODEL_DIR/meshes/
-	cp bathymetry/$PREFIX.$projfname.epsg26987.obj.mtl $MODEL_DIR/meshes/
+	cp bathymetry/$PREFIX.$projfname.epsg$EPSG.obj $MODEL_DIR/meshes/
+	cp bathymetry/$PREFIX.$projfname.epsg$EPSG.obj.mtl $MODEL_DIR/meshes/
 
-	# create model.config 
+	# create model.config
 	cat ./mkbathy_dependencies/templates/model.config | sed s#MODEL_NAME#$PREFIX.$projfname#g > $MODEL_DIR/model.config
 
 	# create model.sdf
 	cat ./mkbathy_dependencies/templates/model.sdf | sed s#MODEL_NAME#$PREFIX.$projfname#g | sed s#MODEL_URI#model://$MODEL_URI/meshes/$MODEL_URI.obj#g  > $MODEL_DIR/model.sdf
-	
+
 	#exit 0
-	
+
 	lat=$elat
-	
+
     done # while lat
 
     lon=$elon
@@ -144,7 +145,7 @@ while [[ $(calc "($lon < $ENDLON)") -eq 1 ]]; do
 
 	echo " "
 	echo " "
-    
+
 done # while lon
 
 
