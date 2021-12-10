@@ -21,7 +21,7 @@ working_dir (parent directory which will be mounted when running the docker imag
 ### Bathymetry source file location
 Go to the working directory and make a child directory named with `bathymetry_source` and put the source bathymetry file inside.
 
-### Download `mkbathy.sh` script and make modifications necessar
+### Download `mkbathy.sh` script and make modifications
 At the working directory
 ```bash
 wget https://github.com/Field-Robotics-Lab/Bathymetry_Converter/blob/master/mkbathy.sh
