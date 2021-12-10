@@ -8,6 +8,8 @@ RUN apt update \
         gmt gmt-dcw gmt-gshhg apcalc sqlite3 checkinstall \
         libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
         lsb-release software-properties-common gnupg python3 python3-dev \
+        libsm6 libxrender1 libfontconfig1 libxext6 libxrender-dev xvfb \
+        libglu1-mesa libgl1-mesa-dev \
  && apt clean
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -27,6 +29,7 @@ RUN wget -O bathymetry_source.tar.bz2 https://www.dropbox.com/s/x3acdnnpw3ej9b4/
 # unzip dependency files (meshlab portable; included in the repository)
 WORKDIR /Bathymetry_Converter/mkbathy_dependencies
 RUN  tar xvfj meshlab_linux_portable.tar.bz2
+RUN ln -s /Bathymetry_Converter/mkbathy_dependencies/meshlab_linux_portable/meshlabserver /usr/local/bin/meshlabserver
 
 # Install proj
 WORKDIR /proj
@@ -51,14 +54,6 @@ RUN wget -O PDAL-$VERSION_PDAL-src.tar.bz2 https://www.dropbox.com/s/27qt50yh86e
  && tar xvfj PDAL-$VERSION_PDAL-src.tar.bz2
 WORKDIR /pdal/PDAL-$VERSION_PDAL-src
 RUN cmake . && checkinstall -y -install
-
-# Add meshlabserver symbolinc link at /usr/local/bin
-RUN ln -s /Bathymetry_Converter/mkbathy_dependencies/meshlab_linux_portable/meshlabserver /usr/local/bin/meshlabserver
-
-RUN apt update \
- && apt install -y --no-install-recommends \
-        libgl1-mesa-dev libsm6 libxrender1 libfontconfig1 libxext6 libxrender-dev xvfb \
- && apt clean
 
 # Make user (assume host user has 1000:1000 permission)
 RUN useradd -ms /bin/bash mkbathy
