@@ -10,6 +10,13 @@ The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutoria
 * Complete the [Linux Postinstall steps](https://docs.docker.com/engine/install/linux-postinstall/) to allow you to manage Docker as a non-root user.
 
 ## Step 2: Prepare source bathymetry file and the shell script
+- Targeting directory structure
+```
+working_dir (parent directory which will be mounted when running the docker image)
+└── bathymetry_source
+|    └── source bathymetry file (e.g. input.tif)
+└── mkbathy.sh
+```
 
 ### Bathymetry source file location
 Go to the working directory and make a child directory named with `bathymetry_source` and put the source bathymetry file inside.
@@ -32,11 +39,7 @@ You may want to change following parameters in the script,
 - `ENDLON` : ending Longitude
 - `ENDLAT` : ending Latitude
 
-### Directory structure
-- Whatever working dir (parent directory which will be mounted when running the docker image)
-  - bathymetry_source
-    - whatever source bathymetry file
-  - mkbathy.sh
+
 
 ## Step 3: Pull a precompiled docker image from Docker Hub and run
 Pull precompiled docker image and run at the working directory
