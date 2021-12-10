@@ -32,8 +32,8 @@ You may want to change following parameters in the script,
 - 'EPSG': target EPSG code
 - `DLON`: size of the bathymetry output tiles in Longitude direction
 - `DLAT`: size of the bathymetry output tiles in Latitude direction
-- 'OVERLON`: size of the buffer zone when transitioning between tiles in Longitude direction
-- 'OVERLAT`: size of the buffer zone when transitioning between tiles in Latitude direction
+- `OVERLON`: size of the buffer zone when transitioning between tiles in Longitude direction
+- `OVERLAT`: size of the buffer zone when transitioning between tiles in Latitude direction
 - `STARTLON` : starting Longitude
 - `STARTLAT` : starting Latitude
 - `ENDLON` : ending Longitude
@@ -43,7 +43,7 @@ You may want to change following parameters in the script,
 
 ## Step 3: Pull a precompiled docker image from Docker Hub and run
 Pull precompiled docker image and run at the working directory
-```
+```bash
 # At the working directory which includes bathymetry_source directory with source bathymetry file inside
 docker run -it --rm -v $PWD:/home/mkbathy -w /home/mkbathy woensugchoi/bathymetry_converter:release bash
 chmod +x mkbathy.sh
