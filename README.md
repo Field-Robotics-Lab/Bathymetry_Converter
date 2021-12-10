@@ -15,16 +15,16 @@ The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutoria
 working_dir (parent directory which will be mounted when running the docker image)
 └── bathymetry_source
 |    └── source bathymetry file (e.g. input.tif)
-└── mkbathy.sh
+└── mkbathy_docker.sh
 ```
 
 ### Bathymetry source file location
 Go to the working directory and make a child directory named with `bathymetry_source` and put the source bathymetry file inside.
 
-### Download `mkbathy.sh` script and make modifications
+### Download `mkbathy_docker.sh` script and make modifications
 At the working directory
 ```bash
-wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.sh
+wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy_docker.sh
 ```
 You may want to change following parameters in the script,
 - `prefix` : prefix for the model names
@@ -39,15 +39,13 @@ You may want to change following parameters in the script,
 - `ENDLON` : ending Longitude
 - `ENDLAT` : ending Latitude
 
-
-
 ## Step 3: Pull a precompiled docker image from Docker Hub and run
 Pull precompiled docker image and run at the working directory
 ```bash
 # At the working directory which includes bathymetry_source directory with source bathymetry file inside
 docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
-chmod +x mkbathy.sh
-./mkbathy.sh
+chmod +x mkbathy_docker.sh
+./mkbathy_docker.sh
 ```
 
 
