@@ -116,7 +116,7 @@ while [[ $(calc "($lon < $ENDLON)") -eq 1 ]]; do
 	# Simplify in meshlab and get rid of spurious faces at edges from triangulation.  Vertex normals need to be retained.
 	#meshlabserver -i bathymetry/$PREFIX.$projfname.epsg26987.ply -s /Bathymetry_Converter/mkbathy_dependencies/bathy.mlx -o bathymetry/$PREFIX.$projfname.epsg26987.obj -om vn
 	# script bathy3.mlx works in version 2020.03.  many syntax changes between versions.
-	xvfb-run -a -s "-screen 0 800x600x24" -i bathymetry/$PREFIX.$projfname.epsg$EPSG.ply -s $MLX -o bathymetry/$PREFIX.$projfname.epsg$EPSG.obj -m vn wt
+	xvfb-run -a -s "-screen 0 800x600x24" meshlabserver -i bathymetry/$PREFIX.$projfname.epsg$EPSG.ply -s $MLX -o bathymetry/$PREFIX.$projfname.epsg$EPSG.obj -m vn wt
 
 	# texture map?!  Not useful for underwater stuff anyway and we can use tiling in gazebo.
 
