@@ -24,7 +24,7 @@ Go to the working directory and make a child directory named with `bathymetry_so
 ### Download `mkbathy.sh` script and make modifications
 At the working directory
 ```bash
-wget https://github.com/Field-Robotics-Lab/Bathymetry_Converter/blob/master/mkbathy.sh
+wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.sh
 ```
 You may want to change following parameters in the script,
 - `prefix` : prefix for the model names
@@ -45,7 +45,7 @@ You may want to change following parameters in the script,
 Pull precompiled docker image and run at the working directory
 ```bash
 # At the working directory which includes bathymetry_source directory with source bathymetry file inside
-docker run -it --rm -v $PWD:/home/mkbathy -w /home/mkbathy woensugchoi/bathymetry_converter:release bash
+docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
 chmod +x mkbathy.sh
 ./mkbathy.sh
 ```
