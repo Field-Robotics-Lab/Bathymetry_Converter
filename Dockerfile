@@ -55,6 +55,11 @@ RUN cmake . && checkinstall -y -install
 # Add meshlabserver symbolinc link at /usr/local/bin
 RUN ln -s /Bathymetry_Converter/mkbathy_dependencies/meshlab_linux_portable/meshlabserver /usr/local/bin/meshlabserver
 
+RUN apt update \
+ && apt install -y --no-install-recommends \
+        libgl1-mesa-dev libsm6 libxrender1 libfontconfig1 libxext6 libxrender-dev xvfb \
+ && apt clean
+
 # Make user (assume host user has 1000:1000 permission)
 RUN useradd -ms /bin/bash mkbathy
 USER mkbathy
