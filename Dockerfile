@@ -52,10 +52,13 @@ RUN wget -O PDAL-$VERSION_PDAL-src.tar.bz2 https://www.dropbox.com/s/27qt50yh86e
 WORKDIR /pdal/PDAL-$VERSION_PDAL-src
 RUN cmake . && checkinstall -y -install
 
+# Add meshlabserver symbolinc link at /usr/local/bin
+RUN ln -s /Bathymetry_Converter/mkbathy_dependencies/meshlab_linux_portable/meshlabserver /usr/local/bin/meshlabserver
+
 # Make user (assume host user has 1000:1000 permission)
 RUN useradd -ms /bin/bash mkbathy
 USER mkbathy
 WORKDIR /home/mkbathy
 
 # Add path for proj, gdal, and pdal
-RUN echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib' >> ~/.bashrc
+RUN echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib' >> /home/mkbathy/.bashrc
