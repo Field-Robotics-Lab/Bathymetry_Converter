@@ -3,7 +3,7 @@
 ## Proclaimer
 The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutorial for DEM link](http://gazebosim.org/tutorials?tut=dem&cat=build_world)). However, it handles only grids and suggests downsampling to coarse resolutions. The pipeline of this converter constructs simplified triangular meshes that retain detail where it is needed. The pipeline also creates overlap and generates tiles with the special/arbitrary filenames required by the plugin. A major limitation of the bathymetry converter-plugin is the arbitrary file naming convention that has to be followed for the tiling to work.
 
-# Run with precompiled docker image
+# Method 1: Run with precompiled docker image
 
 ## Step 1: Install Docker
 * Follow the [Docker installation instructions](https://docs.docker.com/engine/install/ubuntu/).
@@ -51,7 +51,7 @@ chmod +x mkbathy.sh
 ```
 
 
-# Installation directly at the Host machine
+# Method 2: Installation directly at the Host machine
 * This process takes much time (approx. 2 hours)
 
 ## Clone the bathymetry converter repository
