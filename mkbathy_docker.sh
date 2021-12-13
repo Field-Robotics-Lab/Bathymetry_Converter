@@ -35,8 +35,8 @@ ENDLAT=41.529
 
 MLX=/Bathymetry_Converter/mkbathy_dependencies/bathy.mlx
 mkdir -p bathymetry
-gdal_translate -of GMT $SRC bathymetry/$PREFIX.grd
-
+gdalwarp -t_srs "EPSG:4326" $SRC bathymetry/$PREFIX.tif
+gdal_translate -of GMT bathymetry/$PREFIX.tif bathymetry/$PREFIX.grd
 
 # GMRT ~60 m bathy MV sound and somewhat south.
 # PREFIX=gmrt
