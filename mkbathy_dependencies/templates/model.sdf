@@ -16,7 +16,7 @@
 	<material>
 	  <script>
 	    <uri>file://Media/materials/scripts/sand.material</uri>
-	    <name>WindSim/SandAndStones</name>
+	    <name>UUVSimulator/SandAndStones</name>
 	  </script>
 	</material>
       </visual>
