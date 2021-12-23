@@ -42,7 +42,7 @@ RUN ./configure && make -j$(nproc) && checkinstall -y -install
 # Install gdal
 WORKDIR /gdal
 ENV VERSION_GDAL=3.1.3
-RUN wget -O gdal-$VERSION_GDAL.tar.gz https://www.dropbox.com/s/uucd3qwee43bhj9/gdal-3.1.3.tar.gz?dl=1 \
+RUN wget --no-check-certificate -O gdal-$VERSION_GDAL.tar.gz https://www.dropbox.com/s/uucd3qwee43bhj9/gdal-3.1.3.tar.gz \
  && tar -xzf gdal-$VERSION_GDAL.tar.gz
 WORKDIR /gdal/gdal-$VERSION_GDAL
 RUN ./configure --enable-shared --with-python=python3 --with-proj=/usr/local && make -j$(nproc) && checkinstall -y -install
@@ -50,10 +50,25 @@ RUN ./configure --enable-shared --with-python=python3 --with-proj=/usr/local && 
 # Install pdal
 WORKDIR /pdal
 ENV VERSION_PDAL=2.2.0
-RUN wget -O PDAL-$VERSION_PDAL-src.tar.bz2 https://www.dropbox.com/s/27qt50yh86exo9c/PDAL-2.2.0-src.tar.bz2?dl=1 \
+RUN wget --no-check-certificate -O PDAL-$VERSION_PDAL-src.tar.bz2 https://www.dropbox.com/s/27qt50yh86exo9c/PDAL-2.2.0-src.tar.bz2?dl=1 \
  && tar xvfj PDAL-$VERSION_PDAL-src.tar.bz2
 WORKDIR /pdal/PDAL-$VERSION_PDAL-src
 RUN cmake . && checkinstall -y -install
+
+RUN dpkg --add-architecture i386
+RUN apt update \
+ && apt install -y \
+        python3-pip \
+ && apt clean
+
+RUN pip3 install numpy
+
+# Update template
+WORKDIR /Bathymetry_Converter/mkbathy_dependencies/templates
+RUN curl -fsSL https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy_dependencies/templates/model.sdf > model.sdf
+WORKDIR /Bathymetry_Converter/mkbathy_dependencies
+RUN curl -fsSL https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy_dependencies/bathy.mlx > bathy.mlx
+RUN curl -fsSL https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy_dependencies/combine.py > combine.py
 
 # Make user (assume host user has 1000:1000 permission)
 RUN useradd -ms /bin/bash mkbathy
