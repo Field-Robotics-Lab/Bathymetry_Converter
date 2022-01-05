@@ -62,6 +62,7 @@ RUN apt update \
  && apt clean
 
 RUN pip3 install numpy
+RUN pip3 install gdal==3.1.3
 
 # Update template
 WORKDIR /Bathymetry_Converter/mkbathy_dependencies/templates
