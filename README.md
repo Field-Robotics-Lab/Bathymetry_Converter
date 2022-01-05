@@ -135,3 +135,11 @@ chmod +x mkbathy.sh
 ./mkbathy.sh
 ```
 converted gazebo model files will be saved at Bathymetry_Converter/bathymetry to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
+
+
+# To colorize the grey bathymetry image
+```bash
+docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
+# copy color.txt from this repo, which is a colormap definition
+gdaldem color-relief input.tif color.txt output.tif
+```
