@@ -16,7 +16,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ############  Download repo and example files  #############
 # Clone the bathymetry converter repositoryClone
-ENV VERSION_REPO=3fdce851208c549a2cadb10e0b280e189d4edb08
+ENV VERSION_REPO=18b07919de63ef2b3d2ae66d97476e9a7357e2b2
 RUN curl -fsSL https://github.com/Field-Robotics-Lab/Bathymetry_Converter/archive/$VERSION_REPO.tar.gz | tar xz
 RUN mv Bathymetry_Converter-$VERSION_REPO Bathymetry_Converter
 
