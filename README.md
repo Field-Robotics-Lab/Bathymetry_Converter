@@ -24,6 +24,7 @@ Go to the working directory and make a child directory named with `bathymetry_so
   - https://www.ncei.noaa.gov/maps/bathymetry/
   - Look for `Bathymetric Surveys / NOAA NOS Hydrographic Data / All Surveys with Digital Data` and `Digital Elevation Models / All DEMs`
   - The ones by Multibeam surveys and Lidar datasets without continous bathymetry dataset has low compatability for converting process when generating mesh file and smoothing
+  - Preferably, `Continuously Updated Digital Elevation Model (CUDEM)` works amazingly with this converter.
 
 ### Download `mkbathy_docker.sh` script and make modifications
 At the working directory
