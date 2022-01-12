@@ -34,7 +34,6 @@ wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/m
 You may want to change following parameters in the script,
 - `prefix` : prefix for the model names
 - `SRC`: path to source bathymetry file
-- 'EPSG': target EPSG code
 - `DLON`: size of the bathymetry output tiles in Longitude direction
 - `DLAT`: size of the bathymetry output tiles in Latitude direction
 - `OVERLON`: size of the buffer zone when transitioning between tiles in Longitude direction
@@ -43,6 +42,8 @@ You may want to change following parameters in the script,
 - `STARTLAT` : starting Latitude
 - `ENDLON` : ending Longitude
 - `ENDLAT` : ending Latitude
+
+* Note : The script transforms the any bathymetry file that gdal can read into a EPSG:4326 (GPS; lat/lon) in the process and output the final bathymetry tile in EPSG:3857 (UTM; X/Y) to be read correctly in the simulator
 
 ## Step 3: Pull a precompiled docker image from Docker Hub and run
 Pull precompiled docker image and run at the working directory
