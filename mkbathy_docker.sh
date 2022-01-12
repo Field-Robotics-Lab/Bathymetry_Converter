@@ -44,7 +44,7 @@ ENDLAT=17.95
 # # ENDLAT=41.529
 #######################################################################
 
-# MLX=/Bathymetry_Converter/mkbathy_dependencies/bathy.mlx
+MLX=/Bathymetry_Converter/mkbathy_dependencies/bathy.mlx
 mkdir -p bathymetry
 
 gdalwarp -t_srs "EPSG:4326" $SRC bathymetry/$PREFIX.tif
