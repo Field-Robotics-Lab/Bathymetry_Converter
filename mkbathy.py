@@ -49,7 +49,7 @@ Path(PREFIX).mkdir(parents=True, exist_ok=True) # Final product directory
 PATH = "bathymetry/"
 
 # Reproject into WGS (EPSG:4326)
-print("Initiating...")
+print("Initiating... (It may take longer to initiate for large source")
 gdal.Warp(PATH + PREFIX + '.grd', SOURCE, dstSRS='EPSG:4326', format='GMT')
 
 longitude = STARTLON

@@ -59,7 +59,7 @@ You may want to change following parameters on top of the script,
 Pull precompiled docker image and run at the working directory
 ```bash
 # At the working directory which includes bathymetry_source directory with source bathymetry file inside
-docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir bathymetry_converter:release  python mkbathy.py
+docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir bathymetry_converter:release python mkbathy.py
 ```
 
 # Method 2: Installation directly at the Host machine
