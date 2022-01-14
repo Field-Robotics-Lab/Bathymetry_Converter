@@ -1,0 +1,26 @@
+<!DOCTYPE FilterScript>
+<FilterScript>
+ <filter name="Taubin Smooth">
+  <Param value="0.9" name="lambda" type="RichFloat" isxmlparam="0" />
+  <Param value="-0.53" name="mu" type="RichFloat" isxmlparam="0" />
+  <Param value="10" name="stepSmoothNum" type="RichInt" isxmlparam="0" />
+  <Param value="false" name="Selected" type="RichBool" isxmlparam="0" />
+ </filter>
+ <filter name="Re-Compute Face Normals"/>
+ <filter name="Simplification: Quadric Edge Collapse Decimation">
+  <Param value="0" name="TargetFaceNum" type="RichInt" isxmlparam="0" />
+  <Param value="0.10" name="TargetPerc" type="RichFloat" isxmlparam="0" />
+  <Param value="0.3" name="QualityThr" type="RichFloat" isxmlparam="0" />
+  <Param value="true" name="PreserveBoundary" type="RichBool" isxmlparam="0" />
+  <Param value="1" name="BoundaryWeight" type="RichFloat" isxmlparam="0" />
+  <Param value="false" name="PreserveNormal" type="RichBool" isxmlparam="0" />
+  <Param value="false" name="PreserveTopology" type="RichBool" isxmlparam="0" />
+  <Param value="true" name="OptimalPlacement" type="RichBool" isxmlparam="0" />
+  <Param value="false" name="PlanarQuadric" type="RichBool" isxmlparam="0" />
+  <Param value="0.001" name="PlanarWeight" type="RichFloat" isxmlparam="0" />
+  <Param value="false" name="QualityWeight" type="RichBool" isxmlparam="0" />
+  <Param value="true" name="AutoClean" type="RichBool" isxmlparam="0" />
+  <Param value="false" name="Selected" type="RichBool" isxmlparam="0" />
+ </filter>
+ <filter name="Re-Compute Face Normals"/>
+</FilterScript>

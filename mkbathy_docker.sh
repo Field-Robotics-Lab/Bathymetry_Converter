@@ -5,20 +5,20 @@
 #######################################################################
 
 ## ---------- Puerto Rico ------------ ##
-PREFIX=puertoRico
-SRC=bathymetry_source/mayaguez_13_mhw_2007.tif
+PREFIX=MontereyBay
+SRC=bathymetry_source/monterey_13_navd88_2012.nc
 
 # 1000 m x 1000 m, roughly.  Good for NCEI 1/9 arc-second
-DLON=0.010
-DLAT=0.010
+DLON=0.01
+DLAT=0.01
 OVERLON=0.0005
 OVERLAT=0.0005
 
 # Puerto Rico
-STARTLON=-67.30
-STARTLAT=17.90
-ENDLON=-67.20
-ENDLAT=17.95
+STARTLON=-121.825
+STARTLAT=36.790
+ENDLON=-121.805
+ENDLAT=36.810
 #STARTLON=-67.440
 #STARTLAT=17.855
 #ENDLON=-66.939
@@ -44,7 +44,7 @@ ENDLAT=17.95
 # # ENDLAT=41.529
 #######################################################################
 
-MLX=/Bathymetry_Converter/mkbathy_dependencies/bathy.mlx
+MLX=bathy.mlx
 mkdir -p bathymetry
 
 gdalwarp -t_srs "EPSG:4326" $SRC bathymetry/$PREFIX.tif
