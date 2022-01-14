@@ -1,7 +1,17 @@
 * The converter script was developed by Micahel Jakuba at WHOI and modified/implemented to the dave project by Woensug Choi.
 
+![image](https://user-images.githubusercontent.com/7955120/149531647-2ba86a11-955d-4684-9d0b-bd53ea0fec3d.png)
+
 ## Proclaimer
-The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutorial for DEM link](http://gazebosim.org/tutorials?tut=dem&cat=build_world)). However, it handles only grids and suggests downsampling to coarse resolutions. The pipeline of this converter constructs simplified triangular meshes that retain detail where it is needed. The pipeline also creates overlap and generates tiles with the special/arbitrary filenames required by the plugin. A major limitation of the bathymetry converter-plugin is the arbitrary file naming convention that has to be followed for the tiling to work.
+The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutorial for DEM link](http://gazebosim.org/tutorials?tut=dem&cat=build_world)). However, it handles only grids and suggests downsampling to coarse resolutions. Also, Gazebo only allow one heightmap per scene unable to change on the fly. The pipeline of this converter constructs simplified triangular meshes that retain detail where it is needed. The pipeline also creates overlap and generates tiles with the special/arbitrary filenames required by the plugin.
+
+For tutorials, how to use the bathymetry tiles, please visit [Bathymetry Integration Wiki page](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration) of the [Dave project](https://github.com/Field-Robotics-Lab/dave/wiki)
+
+- Any bathymetry file (GeoTiFF, GMT, XYZ, and etc..) can be used as long as the GDAL library supports it
+- Can generate tiles at any position (lat/lon) if the bathymetry file exists
+- Resolution (size of each tile), the size of the overlaping region can be defined
+- The color texture is applied according to depths
+- Everything is dockerized for dependencies
 
 # Method 1: Run with precompiled docker image
 
@@ -15,7 +25,7 @@ The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutoria
 working_dir (parent directory which will be mounted when running the docker image)
 └── bathymetry_source
 |    └── source bathymetry file (e.g. input.tif)
-└── mkbathy_docker.sh
+└── mkbathy.py
 ```
 
 ### Bathymetry source file location
@@ -26,22 +36,22 @@ Go to the working directory and make a child directory named with `bathymetry_so
   - The ones by Multibeam surveys and Lidar datasets without continous bathymetry dataset has low compatability for converting process when generating mesh file and smoothing
   - Preferably, `Continuously Updated Digital Elevation Model (CUDEM)` works amazingly with this converter.
 
-### Download `mkbathy_docker.sh` script and make modifications
+### Download `mkbathy.py` script and make modifications
 At the working directory
 ```bash
-wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy_docker.sh
+wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.py
 ```
-You may want to change following parameters in the script,
-- `prefix` : prefix for the model names
-- `SRC`: path to source bathymetry file
-- `DLON`: size of the bathymetry output tiles in Longitude direction
-- `DLAT`: size of the bathymetry output tiles in Latitude direction
-- `OVERLON`: size of the buffer zone when transitioning between tiles in Longitude direction
-- `OVERLAT`: size of the buffer zone when transitioning between tiles in Latitude direction
+You may want to change following parameters on top of the script,
+- `PREFIX` : prefix for the model names
+- `SOURCE`: path to source bathymetry file
 - `STARTLON` : starting Longitude
 - `STARTLAT` : starting Latitude
 - `ENDLON` : ending Longitude
 - `ENDLAT` : ending Latitude
+- `DLON`: size of the bathymetry output tiles in Longitude direction
+- `DLAT`: size of the bathymetry output tiles in Latitude direction
+- `OVERLON`: size of the buffer zone when transitioning between tiles in Longitude direction
+- `OVERLAT`: size of the buffer zone when transitioning between tiles in Latitude direction
 
 * Note : The script transforms the any bathymetry file that gdal can read into a EPSG:4326 (GPS; lat/lon) in the process and output the final bathymetry tile in EPSG:3857 (UTM; X/Y) to be read correctly in the simulator
 
@@ -49,11 +59,8 @@ You may want to change following parameters in the script,
 Pull precompiled docker image and run at the working directory
 ```bash
 # At the working directory which includes bathymetry_source directory with source bathymetry file inside
-docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
-chmod +x mkbathy_docker.sh
-./mkbathy_docker.sh
+docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir bathymetry_converter:release  python mkbathy.py
 ```
-
 
 # Method 2: Installation directly at the Host machine
 * This process takes much time (approx. 2 hours)
