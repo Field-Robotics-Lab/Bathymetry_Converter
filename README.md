@@ -17,7 +17,7 @@ For tutorials, how to use the bathymetry tiles, please visit [Bathymetry Integra
 - The color texture is applied according to depths
 - Everything is dockerized for dependencies
 
-# Method 1: Run with precompiled docker image
+# Run `mkbathy.py` script with precompiled docker image
 
 ## Step 1: Install Docker
 * Follow the [Docker installation instructions](https://docs.docker.com/engine/install/ubuntu/).
@@ -34,17 +34,31 @@ working_dir (parent directory which will be mounted when running the docker imag
 
 ### Bathymetry source file location
 Go to the working directory and make a child directory named with `bathymetry_source` and put the source bathymetry file inside.
-- Where to find the source bathymetry file
-  - `Continuously Updated Digital Elevation Model (CUDEM)` works amazingly with this converter
-    - It can be access thorugh [NOAA Digital Coast: Data Access Viewer - CUDEM](https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=8483)
-    - Draw region you want the data with 'Draw' button at the top left and request. It will take about 10 minutes to receive.
-  - NOAA bathymetry database
-    - It can be access through [NOAA Bathymetetric Data Viewer](https://www.ncei.noaa.gov/maps/bathymetry/)
-    - Look for `Bathymetric Surveys / NOAA NOS Hydrographic Data / All Surveys with Digital Data` and `Digital Elevation Models / All DEMs`
-    - For XYZ cloud point datasets, you may need to modify the format to match with [GDAL's ASCII XYZ format](https://gdal.org/drivers/raster/xyz.html)
-      - > starting with GDAL 3.2.1, cells with same X coordinates must be placed on consecutive lines. For a same X coordinate value, the columns must be organized by increasing or decreasing Y values.
-  - For all other datasets, you may rearrance and modify the format into GDAL's ASCII XYZ format
-  - The ones by Multibeam surveys and Lidar datasets without continous bathymetry dataset has low compatability for converting process when generating mesh file and smoothing
+
+For tutorial, download a [NetCDF format dataset (760MB)](https://www.ngdc.noaa.gov/thredds/fileServer/regional/monterey_13_navd88_2012.nc) of the [1/3 arc-second Monterey Bay bathymetry by NCEI](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ngdc.mgg.dem:3544/html) that can also be found at [NOAA Bathymetetric Data Viewer](https://www.ncei.noaa.gov/maps/bathymetry/). For how-to find the bathymetry, read below.
+
+- Explorering [NOAA Bathymetetric Data Viewer](https://www.ncei.noaa.gov/maps/bathymetry/) to obtain bathymetry source
+
+  - Look for `Bathymetric Surveys / NOAA NOS Hydrographic Data / All Surveys with Digital Data` and `Digital Elevation Models / All DEMs (Click checkbox of DEM Footprints)`
+
+  - For Global regions (typically moderate resolution)
+    - [ETOPO1 Global Relief Model](https://www.ngdc.noaa.gov/mgg/global/global.html)
+      - ETOPO1 is a 1 arc-minute global relief model of Earth's surface that integrates land topography and ocean bathymetry
+      - Custom range dataset can be extracted at [Grid Extract Tool](https://maps.ngdc.noaa.gov/viewers/grid-extract/index.html)
+    - [NOAA Multibeam Bathymetry Database](https://www.ngdc.noaa.gov/mgg/bathymetry/multibeam.html)
+      - [NOAA AutoGrid](https://www.ngdc.noaa.gov/maps/autogrid/) will create a NetCFD binary grid of the data in your area of interest which this converter can read
+
+  - For Costal Regions (possibly high resolution)
+    - [NOAA Costal Elevation Models](https://www.ngdc.noaa.gov/mgg/coastal/coastal.html)
+    - `Continuously Updated Digital Elevation Model (CUDEM)` works amazingly with this converter
+      - [NOAA Digital Coast: Data Access Viewer - CUDEM](https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=8483) can generate a custom range bathymetry 
+        - Draw region you want the data with 'Draw' button at the top left and request. It takes about 10 minutes to receive
+
+    - All others
+      - For XYZ cloud point datasets, you may need to modify the format to match with [GDAL's ASCII XYZ format](https://gdal.org/drivers/raster/xyz.html)
+        > starting with GDAL 3.2.1, cells with same X coordinates must be placed on consecutive lines. For a same X coordinate value, the columns must be organized by increasing or decreasing Y values.
+      - The ones by Multibeam surveys and Lidar datasets without continous bathymetry dataset has low compatability for converting process when generating mesh file and smoothing
+
 
 
 ### Download `mkbathy.py` script and make modifications
@@ -73,97 +87,4 @@ Pull precompiled docker image and run at the working directory
 docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir bathymetry_converter:release python mkbathy.py
 ```
 
-# Method 2: Installation directly at the Host machine
-* This process takes much time (approx. 2 hours)
-
-## Clone the bathymetry converter repository
-```bash
-git clone git@github.com:Field-Robotics-Lab/Bathymetry_Converter.git
-```
-
-## Install prerequisite packages (approx. 1.5 hours)
-* Installation based on Ubuntu 18.04 LTS
-
-### download bathymetry source file
-```bash
-cd Bathymetry_Converter
-wget -O bathymetry_source.tar.bz2 https://www.dropbox.com/s/x3acdnnpw3ej9b4/bathymetry_source.tar.bz2?dl=1
-tar xvfj bathymetry_source.tar.bz2
-cd ..
-```
-
-### unzip dependency files (meshlab portable; included in the repository)
-from dave project folder
-```bash
-cd Bathymetry_Converter/mkbathy_dependencies
-tar xvfj meshlab_linux_portable.tar.bz2
-cd ../../
-```
-
-### Packages for the bash script
-
-```bash
-sudo apt-get install gmt gmt-dcw gmt-gshhg apcalc sqlite3 checkinstall libudunits2-dev libgdal-dev libgeos-dev libproj-dev
-```
-
-### Install gdal and pdal
-
-- Install proj version ≥ 6.0
-
-     - Download proj release at '[https://github.com/OSGeo/PROJ/releases](https://github.com/OSGeo/PROJ/releases)' or [version 7.1.1](https://www.dropbox.com/s/4rjx9vutlezt0yx/proj-7.1.1.tar.gz?dl=1)
-
-     - unzip and install from downloaded source file (here, flag -j4 means using 4 cores)
-
-```bash
-tar -xzf proj-$VERSION.tar.gz && cd proj-$VERSION
-./configure && make -j4
-sudo checkinstall -y -install
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-proj --version
-```
-
-- Install gdal
-
-     - Download gdalrelease at '[https://github.com/OSGeo/gdal/releases](https://github.com/OSGeo/gdal/releases)' or [version 3.1.3](https://www.dropbox.com/s/uucd3qwee43bhj9/gdal-3.1.3.tar.gz?dl=1)
-
-     - unzip and install from downloaded source file (here, flag -j4 means using 4 cores)
-
-```bash
-tar -xzf gdal-$VERSION.tar.gz && cd gdal-$VERSION
-./configure --enable-shared --with-python=python3 --with-proj=/usr/local
-make -j4
-sudo checkinstall -y -install
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib" >> ~/.bashrc
-gdalinfo --version
-```
-
-- Install pdal
-
-     - Download latest PADAL release at '[https://github.com/PDAL/PDAL/releases](https://github.com/PDAL/PDAL/releases)' or [version 2.2.0](https://www.dropbox.com/s/27qt50yh86exo9c/PDAL-2.2.0-src.tar.bz2?dl=1)
-
-     - unzip and install from downloaded latest source file (here, flag -j4 means using 4 cores)
-
-     * if stopped at log file opened with vi, type ':q' to quit
-
-```bash
-tar xvfj PDAL-$VERSION-src.tar.bz2 && cd PDAL-$VERSION-src
-cmake . && sudo checkinstall -y -install
-pdal --version
-```
-
-## Run mkbathy.sh script to convert data (approx. 0.5 hours)
-
-```bash
-chmod +x mkbathy.sh
-./mkbathy.sh
-```
 converted gazebo model files will be saved at Bathymetry_Converter/bathymetry to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
-
-
-# To colorize the grey bathymetry image
-```bash
-docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
-# copy color.txt from this repo, which is a colormap definition
-gdaldem color-relief input.tif color.txt output.tif
-```
