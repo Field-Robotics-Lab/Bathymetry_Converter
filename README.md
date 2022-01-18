@@ -82,9 +82,10 @@ You may want to change following parameters on top of the script,
 
 ## Step 3: Pull a precompiled docker image from Docker Hub and run
 Pull precompiled docker image and run at the working directory
-```bash
-# At the working directory which includes bathymetry_source directory with source bathymetry file inside
-docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release python mkbathy.py
-```
+
+- At the working directory which includes bathymetry_source directory with source bathymetry file inside
+  ```bash
+  docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release python mkbathy.py
+  ```
 
 converted gazebo model files will be saved at Bathymetry_Converter/bathymetry to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
