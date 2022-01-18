@@ -52,6 +52,11 @@ PATH = "bathymetry/"
 print("Initiating... (It may take longer to initiate for large source")
 gdal.Warp(PATH + PREFIX + '.grd', SOURCE, dstSRS='EPSG:4326', format='GMT')
 
+# Get No Data Value (to skip later)
+source = gdal.Open(SOURCE)
+band = source.GetRasterBand(1)
+NoDataValue = band.GetNoDataValue()
+
 longitude = STARTLON
 latitude = STARTLAT
 # Loop longitude
@@ -83,11 +88,12 @@ for lon in trange(nLon):
         target = osr.SpatialReference(); target.ImportFromEPSG(3857)
         transform = osr.CoordinateTransformation(source, target)
         for pt in xyz:
-            point = ogr.CreateGeometryFromWkt( \
-                    "POINT (" + repr(pt[1]) + " " + repr(pt[0]) + ")")
-            point.Transform(transform)
-            pt[0] = point.ExportToWkt().split(" ")[1].split("(")[1]
-            pt[1] = point.ExportToWkt().split(" ")[2].split(")")[0]
+            if not pt[2] == NoDataValue:
+                point = ogr.CreateGeometryFromWkt( \
+                        "POINT (" + repr(pt[1]) + " " + repr(pt[0]) + ")")
+                point.Transform(transform)
+                pt[0] = point.ExportToWkt().split(" ")[1].split("(")[1]
+                pt[1] = point.ExportToWkt().split(" ")[2].split(")")[0]
 
         # Save asc file with 'X Y Z' header for meshlab
         filename = PATH + PREFIX + "." + tileName + '.epsg3857'
