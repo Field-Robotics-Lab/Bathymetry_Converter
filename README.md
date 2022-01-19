@@ -85,7 +85,8 @@ Pull precompiled docker image and run at the working directory
 
 - At the working directory which includes bathymetry_source directory with source bathymetry file inside
   ```bash
-  docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release python mkbathy.py
+  docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release python3 mkbathy.py
   ```
+  * note : ignore `ERROR 1: PROJ: Unrecognized horizontal grid format for filename 'us_noaa_pvhpgn.tif'`. it's not our problem. it's PROJ's network database problem. It works ok with what's in the cache.
 
 converted gazebo model files will be saved at Bathymetry_Converter/bathymetry to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
