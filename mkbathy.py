@@ -50,7 +50,8 @@ PATH = "bathymetry/"
 
 # Reproject into WGS (EPSG:4326)
 print("Initiating... (It may take longer to initiate for large source")
-gdal.Warp(PATH + PREFIX + '.grd', SOURCE, dstSRS='EPSG:4326', format='GMT')
+os.system("PROJ_NETWORK=ON gdalwarp -t_srs 'EPSG:4326' -of GMT " \
+          + SOURCE + " " + PATH + PREFIX + '.grd')
 
 # Get No Data Value (to skip later)
 source = gdal.Open(SOURCE)
