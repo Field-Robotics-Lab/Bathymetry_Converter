@@ -33,7 +33,7 @@ working_dir (parent directory which will be mounted when running the docker imag
 ```
 
 ### For tutorial source (Monterey Bay)
-1. Download tutorial source bathymetry file
+- Download tutorial source bathymetry file
    downloading a file from google drive became compliated. Install and use gdown. Or, use [this link](https://drive.google.com/file/d/1OdgqNJG9Xr-RSDoTYIHKHDnMkSSUdE9K/view?usp=sharing)
    
    ```bash
@@ -63,6 +63,8 @@ For tutorial, Small portion of the [NetCDF format dataset (760MB)](https://www.n
     - [ETOPO1 Global Relief Model](https://www.ngdc.noaa.gov/mgg/global/global.html)
       - ETOPO1 is a 1 arc-minute global relief model of Earth's surface that integrates land topography and ocean bathymetry
       - Custom range dataset can be extracted at [Grid Extract Tool](https://maps.ngdc.noaa.gov/viewers/grid-extract/index.html)
+    - [GEBCO 2021](https://www.gebco.net/data_and_products/gridded_bathymetry_data/)
+      - GEBCO consits slightly finer resolution than ETOPO1
     - [NOAA Multibeam Bathymetry Database](https://www.ngdc.noaa.gov/mgg/bathymetry/multibeam.html)
       - [NOAA AutoGrid](https://www.ngdc.noaa.gov/maps/autogrid/) will create a NetCFD binary grid of the data in your area of interest which this converter can read
 
@@ -79,7 +81,7 @@ For tutorial, Small portion of the [NetCDF format dataset (760MB)](https://www.n
 
 
 ### Download `mkbathy.py` script and make modifications
-At the working directory (For tutorial data, `MontereyBay` is the working directory)
+At the working directory (For tutorial case, `MontereyBay` is the working directory)
 ```bash
 wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.py
 ```
@@ -106,7 +108,8 @@ Pull precompiled docker image and run at the working directory
   ```
   * note : ignore `ERROR 1: PROJ: Unrecognized horizontal grid format for filename 'us_noaa_pvhpgn.tif'`. it's not our problem. it's PROJ's network database problem. It works ok with what's in the cache.
 
-- Final products will be saved at a directory with `PREFIX` (defined at mkbathy.py) as its name
+- Converted gazebo model files will be saved at a directory with `PREFIX` (defined at mkbathy.py) as its name to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
+
 
 ### Other useful tips
 - To investigate the information (boundaries, max height/depth and etc) of the source bathymetry file, you may also use the docker image
@@ -123,5 +126,3 @@ Pull precompiled docker image and run at the working directory
   ```
   
   You may add `--stats` option to see max/min depth/heights
-
-converted gazebo model files will be saved at Bathymetry_Converter/bathymetry to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
