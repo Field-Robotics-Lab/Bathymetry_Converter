@@ -32,10 +32,28 @@ working_dir (parent directory which will be mounted when running the docker imag
 └── mkbathy.py
 ```
 
+### For tutorial source (Monterey Bay)
+1. Download tutorial source bathymetry file
+   downloading a file from google drive became compliated. Install and use gdown. Or, use [this link](https://drive.google.com/file/d/1OdgqNJG9Xr-RSDoTYIHKHDnMkSSUdE9K/view?usp=sharing)
+   
+   ```bash
+   # Install gdown
+   pip3 install gdown
+   # Download the data from google drive
+   gdown --id 1OdgqNJG9Xr-RSDoTYIHKHDnMkSSUdE9K
+   ```
+   
+   Then extract the tutorial data. Here, working directory `MontereyBay` will be created.
+   
+   ```bash
+   tar -xzvf Bathy_Converter_tutorial.tar.tar.gz
+   ```
+   
+
 ### Bathymetry source file location
 Go to the working directory and make a child directory named with `bathymetry_source` and put the source bathymetry file inside.
 
-For tutorial, download a [NetCDF format dataset (760MB)](https://www.ngdc.noaa.gov/thredds/fileServer/regional/monterey_13_navd88_2012.nc) of the [1/3 arc-second Monterey Bay bathymetry by NCEI](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ngdc.mgg.dem:3544/html) that can also be found at [NOAA Bathymetetric Data Viewer](https://www.ncei.noaa.gov/maps/bathymetry/). For how-to find the bathymetry, read below.
+For tutorial, Small portion of the [NetCDF format dataset (760MB)](https://www.ngdc.noaa.gov/thredds/fileServer/regional/monterey_13_navd88_2012.nc) of the [1/3 arc-second Monterey Bay bathymetry by NCEI](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ngdc.mgg.dem:3544/html) is included which can also be found at [NOAA Bathymetetric Data Viewer](https://www.ncei.noaa.gov/maps/bathymetry/). For how-to find the bathymetry, read below.
 
 - Explorering [NOAA Bathymetetric Data Viewer](https://www.ncei.noaa.gov/maps/bathymetry/) to obtain bathymetry source
 
@@ -60,9 +78,8 @@ For tutorial, download a [NetCDF format dataset (760MB)](https://www.ngdc.noaa.g
       - The ones by Multibeam surveys and Lidar datasets without continous bathymetry dataset has low compatability for converting process when generating mesh file and smoothing
 
 
-
 ### Download `mkbathy.py` script and make modifications
-At the working directory
+At the working directory (For tutorial data, `MontereyBay` is the working directory)
 ```bash
 wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.py
 ```
@@ -88,5 +105,23 @@ Pull precompiled docker image and run at the working directory
   docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release python3 mkbathy.py
   ```
   * note : ignore `ERROR 1: PROJ: Unrecognized horizontal grid format for filename 'us_noaa_pvhpgn.tif'`. it's not our problem. it's PROJ's network database problem. It works ok with what's in the cache.
+
+- Final products will be saved at a directory with `PREFIX` (defined at mkbathy.py) as its name
+
+### Other useful tips
+- To investigate the information (boundaries, max height/depth and etc) of the source bathymetry file, you may also use the docker image
+  
+  Launch the docker image's bash
+  ```bash
+  docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
+  ```
+  
+  Get information of the source bathymetry file
+  
+  ```bash
+  gdalinfo bathymetry_source/monterey_13_navd88_2012.nc
+  ```
+  
+  You may add `--stats` option to see max/min depth/heights
 
 converted gazebo model files will be saved at Bathymetry_Converter/bathymetry to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
