@@ -46,7 +46,7 @@ working_dir (parent directory which will be mounted when running the docker imag
    Then extract the tutorial data. Here, working directory `MontereyBay` will be created.
    
    ```bash
-   tar -xzvf Bathy_Converter_tutorial.tar.tar.gz
+   tar -xzvf Bathy_Converter_tutorial.tar.gz
    ```
    
 
