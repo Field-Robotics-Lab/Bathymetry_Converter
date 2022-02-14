@@ -89,12 +89,13 @@ for lon in trange(nLon):
         target = osr.SpatialReference(); target.ImportFromEPSG(3857)
         transform = osr.CoordinateTransformation(source, target)
         for pt in xyz:
-            if not pt[2] == NoDataValue:
-                point = ogr.CreateGeometryFromWkt( \
-                        "POINT (" + repr(pt[1]) + " " + repr(pt[0]) + ")")
-                point.Transform(transform)
-                pt[0] = point.ExportToWkt().split(" ")[1].split("(")[1]
-                pt[1] = point.ExportToWkt().split(" ")[2].split(")")[0]
+            if pt[2] == NoDataValue or np.isnan(pt[2]):
+                pt[2] = -9999
+            point = ogr.CreateGeometryFromWkt( \
+                    "POINT (" + repr(pt[1]) + " " + repr(pt[0]) + ")")
+            point.Transform(transform)
+            pt[0] = point.ExportToWkt().split(" ")[1].split("(")[1]
+            pt[1] = point.ExportToWkt().split(" ")[2].split(")")[0]
 
         # Save asc file with 'X Y Z' header for meshlab
         filename = PATH + PREFIX + "." + tileName + '.epsg3857'

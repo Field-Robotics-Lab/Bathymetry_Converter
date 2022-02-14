@@ -35,20 +35,20 @@ working_dir (parent directory which will be mounted when running the docker imag
 ### For tutorial source (Monterey Bay)
 - Download tutorial source bathymetry file
    downloading a file from google drive became compliated. Install and use gdown. Or, use [this link](https://drive.google.com/file/d/1OdgqNJG9Xr-RSDoTYIHKHDnMkSSUdE9K/view?usp=sharing)
-   
+
    ```bash
    # Install gdown
    pip3 install gdown
    # Download the data from google drive
    gdown --id 1OdgqNJG9Xr-RSDoTYIHKHDnMkSSUdE9K
    ```
-   
+
    Then extract the tutorial data. Here, working directory `MontereyBay` will be created.
-   
+
    ```bash
    tar -xzvf Bathy_Converter_tutorial.tar.gz
    ```
-   
+
 
 ### Bathymetry source file location
 Go to the working directory and make a child directory named with `bathymetry_source` and put the source bathymetry file inside.
@@ -71,7 +71,7 @@ For tutorial, Small portion of the [NetCDF format dataset (760MB)](https://www.n
   - For Costal Regions (possibly high resolution)
     - [NOAA Costal Elevation Models](https://www.ngdc.noaa.gov/mgg/coastal/coastal.html)
     - `Continuously Updated Digital Elevation Model (CUDEM)` works amazingly with this converter
-      - [NOAA Digital Coast: Data Access Viewer - CUDEM](https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=8483) can generate a custom range bathymetry 
+      - [NOAA Digital Coast: Data Access Viewer - CUDEM](https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=8483) can generate a custom range bathymetry
         - Draw region you want the data with 'Draw' button at the top left and request. It takes about 10 minutes to receive
 
     - All others
@@ -113,16 +113,31 @@ Pull precompiled docker image and run at the working directory
 
 ### Other useful tips
 - To investigate the information (boundaries, max height/depth and etc) of the source bathymetry file, you may also use the docker image
-  
+
   Launch the docker image's bash
   ```bash
   docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
   ```
-  
+
   Get information of the source bathymetry file
-  
+
   ```bash
   gdalinfo bathymetry_source/monterey_13_navd88_2012.nc
   ```
-  
+
   You may add `--stats` option to see max/min depth/heights
+
+- For XYZ datasets, it's best to transform the source bathymetry file into GeoTiff (it's also useful since you can open it with common image viewer applications)
+
+  Launch the docker image's bash
+  ```bash
+  docker pull woensugchoi/bathymetry_converter:release && docker run -it --rm -v $PWD:/home/mkbathy/workdir -w /home/mkbathy/workdir woensugchoi/bathymetry_converter:release bash
+  ```
+
+  Transform the source bathymetry data in XYZ into Geotiff
+  - You need to provide a EPSG code of the XYZ dataset
+
+  ```bash
+  # this is an example of XYZ dataset in UTM-4N (EPSG:32604)
+  gdalwarp -s_srs 'EPSG:32604' -t_srs 'EPSG:4326' -of GTiff source.xyz source.tif
+  ```
