@@ -83,7 +83,10 @@ For tutorial, Small portion of the [NetCDF format dataset (760MB)](https://www.n
 ### Download `mkbathy.py` script and make modifications
 At the working directory (For tutorial case, `MontereyBay` is the working directory)
 ```bash
+# get mkbathy.py script
 wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/mkbathy.py
+# get color table template
+wget https://raw.githubusercontent.com/Field-Robotics-Lab/Bathymetry_Converter/master/color.txt
 ```
 You may want to change following parameters on top of the script,
 - `PREFIX` : prefix for the model names
@@ -96,6 +99,9 @@ You may want to change following parameters on top of the script,
 - `DLAT`: size of the bathymetry output tiles in Latitude direction
 - `OVERLON`: size of the buffer zone when transitioning between tiles in Longitude direction
 - `OVERLAT`: size of the buffer zone when transitioning between tiles in Latitude direction
+
+The `color.txt` consists of (depth, R,G,B) columns.
+You may want to adjust depth column according to your source.
 
 * Note : The script transforms the any bathymetry file that gdal can read into a EPSG:4326 (GPS; lat/lon) in the process and output the final bathymetry tile in EPSG:3857 (UTM; X/Y) to be read correctly in the simulator
 
