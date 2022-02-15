@@ -17,8 +17,8 @@ SOURCE = 'bathymetry_source/monterey_13_navd88_2012.nc'
 
 # Flag for single tile generation
 ONE_TILE_AT_ORIGIN = False
-# Flag for more smoothness
-SMOOTH_MORE = False
+# Mesh simplification level (0 ~ 3)
+SIMPLIFICATION_LEVEL = 0
 
 # Range
 STARTLON = -121.825
@@ -53,6 +53,10 @@ if ONE_TILE_AT_ORIGIN:
 else:
     print("# Resolution -- Latitude  : " + repr(DLAT) + " with " + repr(OVERLAT) + " overlaps")
     print("#            \_ longitude : " + repr(DLON) + " with " + repr(OVERLON) + " overlaps")
+if SIMPLIFICATION_LEVEL==0:
+    print("# No simplification")
+else:
+    print("# Simplification level = " + repr(SIMPLIFICATION_LEVEL))
 print("#--------------------------------------------------------#\n")
 
 nLon = int(math.ceil((ENDLON-OVERLON-STARTLON)/DLON))
@@ -81,7 +85,6 @@ print("Initiating... (It may take longer to initiate for large source)")
 os.system("PROJ_NETWORK=ON gdalwarp -t_srs 'EPSG:4326' -of GMT " \
           + SOURCE + " " + PATH + PREFIX + '.grd')
 
-print(" ")
 print("Starting conversion..")
 longitude = STARTLON
 latitude = STARTLAT
@@ -159,10 +162,15 @@ for lon in trange(nLon):
         ms = ml.MeshSet()
         ms.load_new_mesh(filename + '.meshlab.asc', triangulate=True)
         ms.apply_filter('taubin_smooth')
-        if SMOOTH_MORE:
-            ms.apply_filter('twostep_smooth', normalthr=30.0, stepsmoothnum=5)
         ms.apply_filter('invert_faces_orientation')
         ms.apply_filter('parametrization_flat_plane', projectionplane='XY')
+        if SIMPLIFICATION_LEVEL>=1:
+            ms.apply_filter('twostep_smooth', normalthr=30.0, stepsmoothnum=5)
+        if SIMPLIFICATION_LEVEL>=2:
+            ms.apply_filter('simplification_quadric_edge_collapse_decimation', preserveboundary=True, planarquadric=True)
+            ms.apply_filter('simplification_quadric_edge_collapse_decimation', preserveboundary=True, planarquadric=True)
+        if SIMPLIFICATION_LEVEL>=3:
+            ms.apply_filter('simplification_quadric_edge_collapse_decimation', preserveboundary=True, planarquadric=True, targetperc=0.1)
         ms.save_current_mesh(filename + '.obj')
         sys.stdout.write("\033[F"+"\r") # supress load_new_mesh output
 
