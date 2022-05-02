@@ -5,7 +5,7 @@
 ## Proclaimer
 The Gazebo includes direct uploads of DEM data on the simulator ([Gazebo tutorial for DEM link](http://gazebosim.org/tutorials?tut=dem&cat=build_world)). However, it handles only grids and suggests downsampling to coarse resolutions. Also, Gazebo only allow one heightmap per scene unable to change on the fly. The pipeline of this converter constructs simplified triangular meshes that retain detail where it is needed. The pipeline also creates overlap and generates tiles with the special/arbitrary filenames required by the plugin.
 
-For tutorials, how to use the bathymetry tiles, please visit [Bathymetry Integration Wiki page](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration) of the [Dave project](https://github.com/Field-Robotics-Lab/dave/wiki)
+For tutorials, how to use the bathymetry tiles, please visit [Bathymetry Integration Wiki page](https://field-robotics-lab.github.io/dave.doc/contents/dave_env/Bathymetry-Integration/) of the [Dave project documentation](https://field-robotics-lab.github.io/dave.doc/)
 
 - Any bathymetry file (GeoTiFF, GMT, XYZ, and etc..) can be used as long as the GDAL library supports it
   - Current dockerized GDAL library supports followings
@@ -114,7 +114,7 @@ Pull precompiled docker image and run at the working directory
   ```
   * note : ignore `ERROR 1: PROJ: Unrecognized horizontal grid format for filename 'us_noaa_pvhpgn.tif'`. it's not our problem. it's PROJ's network database problem. It works ok with what's in the cache.
 
-- Converted gazebo model files will be saved at a directory with `PREFIX` (defined at mkbathy.py) as its name to be called using the bathymetry plugin [bathymetry plugin tutorial](https://github.com/Field-Robotics-Lab/dave/wiki/Bathymetry-Integration)
+- Converted gazebo model files will be saved at a directory with `PREFIX` (defined at mkbathy.py) as its name to be called using the bathymetry plugin [bathymetry plugin tutorial](https://field-robotics-lab.github.io/dave.doc/contents/dave_env/Bathymetry-Integration/)
 
 
 ### Other useful tips
